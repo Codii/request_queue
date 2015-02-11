@@ -1,31 +1,85 @@
 <!DOCTYPE html>
-<html ng-app>
+<html>
 <head>
-	<title></title>
-	<script src="//code.jquery.com/jquery-1.11.0.min.js" async></script>
+	<title>Requests batcher</title>
 
-
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-	<script type="text/javascript" src="scripts/main.js"></script>
+	<!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
 	
-	<style type="text/css">
+	<!-- build:css styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="../bower_components/angular/angular-csp.css">
+    <!-- endbuild -->
+
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="../bower_components/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
+
+    <style type="text/css">
 		body {font-family: "Helvetica Neue", Arial, serif}
 		.BashDashboard { text-align: center; color: gray; }
 		.BashDashboard .count { font-size: 19px; font-weight: 600; }
 		.buttons {padding: 5px;}
 		button { margin: 0px 5px;}
 	</style>
-	<script type="text/javascript">
+	
+</head>
+<body ng-app="app">
+	<div data-ng-controller="BashSessionCtrl" data-ng-cloak>
+		<div class="BashDashboard">
+			Messages sent
+			<div class="count">
+				{{count}}
+			</div>
+			<div class="buttons">
+				<button data-ng-click="startBash()">Start</button>
+				<button data-ng-click="endBash()">Stop</button>
+			</div>
+		</div>
+	</div>
+	
+	<!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
 
-		window.queue = window.requestQ().run();
+    <!-- build:js scripts/plugins.js -->
+    <script src="../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/affix.js"></script>
+    <script src="../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/alert.js"></script>
+    <script src="../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/dropdown.js"></script>
+    <script src="../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/tooltip.js"></script>
+    <script src="../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/modal.js"></script>
+    <script src="../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/transition.js"></script>
+    <script src="../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/button.js"></script>
+    <script src="../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/popover.js"></script>
+    <script src="../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/carousel.js"></script>
+    <script src="../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/scrollspy.js"></script>
+    <script src="../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/collapse.js"></script>
+    <script src="../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/tab.js"></script>
+    <!-- endbuild -->
 
-		function BashSessionCtrl($scope, $http){
+    <!-- build:js scripts/main.js -->
+    <script src="scripts/main.js"></script>
+    <!-- endbuild -->
+    
+    <script src="../bower_components/angular/angular.js"></script>
+
+    <script type="text/javascript">
+
+		var _queue = window.requestQ().run();
+
+		var app = angular.module('app', []);
+
+		app.controller('BashSessionCtrl', ['$scope', '$http', function($scope, $http){
 			$scope.count = 0;
 
 			$scope.sendMessage = function(){
 				$scope.$apply(function(){
-					window.queue.add({
-						url: 						'http://localhost:8124/hello',
+					_queue.add({
+						url: 				'http://localhost:8124/hello',
 						type:        		'GET',
 						crossDomain: 		true,
 						dataType:    		'json',
@@ -46,21 +100,9 @@
 				window.clearInterval($scope.bashInterval)
 			}
 
-		}
+		}]);
+
 	</script>
-</head>
-<body>
-<div data-ng-controller="BashSessionCtrl">
-	<div class="BashDashboard">
-		Messages sent
-		<div class="count">
-			{{count}}
-		</div>
-		<div class="buttons">
-			<button data-ng-click="startBash()">Start</button>
-			<button data-ng-click="endBash()">Stop</button>
-		</div>
-	</div>
-</div>
+
 </body>
 </html>
